@@ -1,0 +1,8 @@
+bin
+obj
+.vscode
+.SD_Store
+appsettings.json
+*.db
+*.db-shm
+*.db-wal
