@@ -12,7 +12,7 @@ const App: React.FC = () => {
   const [activities, setActivities] = useState<IActivity[]>([]);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/activities").then(resp => {
+    axios.get("http://localhost:5000/activities").then((resp) => {
       console.log(resp.data);
       setActivities(resp.data);
     });
@@ -21,7 +21,7 @@ const App: React.FC = () => {
   return (
     <div className="App">
       <NavBar />
-      <Container>
+      <Container style={{ marginTop: "7em" }}>
         <List>
           {activities.map((activity: IActivity) => {
             return <List.Item key={activity.id}>{activity.title}</List.Item>;

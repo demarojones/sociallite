@@ -6,7 +6,7 @@ const NavBar = () => {
     <Menu inverted borderless fixed="top">
       <Container text>
         <Menu.Item header>
-          <img src="/assets/logo.png" alt="logo" />
+          <img src="/assets/logo.png" alt="logo" style={{ marginRight: 10 }} />
           <header className="App-header">REACTIVITIES</header>
         </Menu.Item>
         <Menu.Item header>Activities</Menu.Item>
