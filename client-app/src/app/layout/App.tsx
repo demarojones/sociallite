@@ -5,6 +5,7 @@ import { Container } from "semantic-ui-react";
 import { IActivity } from "../models/activity";
 import NavBar from "../../features/nav/navbar";
 import { ActivityDashboard } from "../../features/activities/dashboard/ActivityDashboard";
+import api from "../api/api";
 
 interface IState {
   activities: IActivity[];
@@ -27,33 +28,38 @@ const App: React.FC = () => {
   };
 
   const handleCreateActivity = (activity: IActivity) => {
-    setActivities([...activities, activity]);
-    setSelectedActivity(activity);
-    setEditMode(false);
+    api.Activities.create(activity).then(() => {
+      setActivities([...activities, activity]);
+      setSelectedActivity(activity);
+      setEditMode(false);
+    });
   };
 
   const handleEditActivity = (activity: IActivity) => {
-    setActivities([
-      ...activities.filter((a) => a.id !== activity.id),
-      activity,
-    ]);
-    setSelectedActivity(activity);
-    setEditMode(false);
+    api.Activities.update(activity).then(() => {
+      setActivities([
+        ...activities.filter((a) => a.id !== activity.id),
+        activity,
+      ]);
+      setSelectedActivity(activity);
+      setEditMode(false);
+    });
   };
 
   const handleDeleteActivity = (id: string) => {
-    setActivities([...activities.filter((a) => a.id !== id)]);
-    if (selectedActivity && selectedActivity.id === id) {
-      setSelectedActivity(null);
-    }
+    api.Activities.delete(id).then(() => {
+      setActivities([...activities.filter((a) => a.id !== id)]);
+      if (selectedActivity && selectedActivity.id === id) {
+        setSelectedActivity(null);
+      }
+    });
   };
 
   useEffect(() => {
-    axios.get("http://localhost:5000/activities").then((resp) => {
-      console.log(resp.data);
+    api.Activities.list().then((resp) => {
       let acts: IActivity[] = [];
-      resp.data.forEach((a: any) => {
-        a.date = a.date.split(".")[0];
+      resp.forEach((a) => {
+        a.date = a.date?.split(".")[0];
         acts.push(a);
       });
       setActivities(acts);
