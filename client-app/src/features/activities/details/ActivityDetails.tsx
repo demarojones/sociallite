@@ -1,43 +1,41 @@
-import React from "react";
-import { IActivity } from "../../../app/models/activity";
+import React, { useContext } from "react";
 import { Card, Image, Button } from "semantic-ui-react";
+import activityStore from "../../../app/stores/activityStore";
+import { observer } from "mobx-react-lite";
 
-interface IProps {
-  activity: IActivity;
-  setEditMode: (editMode: boolean) => void;
-  setSelectedActivity: (activity: IActivity | null) => void;
-  submitting: boolean;
-}
-export const ActivityDetails: React.FC<IProps> = ({
-  activity,
-  setEditMode,
-  setSelectedActivity,
-  submitting,
-}) => {
+const ActivityDetails: React.FC = () => {
+  const {
+    setEditMode,
+    selectedActivity: activity,
+    submitting,
+    setSelectedActivity,
+  } = useContext(activityStore);
+
   return (
     <Card fluid>
       <Image
-        src={`/assets/categoryImages/${activity.category}.jpg`}
+        src={`/assets/categoryImages/${activity!.category}.jpg`}
         wrapped
         ui={false}
       />
       <Card.Content>
-        <Card.Header>{activity.title}</Card.Header>
+        <Card.Header>{activity!.title}</Card.Header>
         <Card.Meta>
-          <span className="date">{activity.date}</span>
+          <span className="date">{activity!.date}</span>
         </Card.Meta>
-        <Card.Description>{activity.description}</Card.Description>
+        <Card.Description>{activity!.description}</Card.Description>
       </Card.Content>
       <Card.Content extra>
         <Button.Group>
           <Button
+            loading={submitting}
             onClick={() => setEditMode(true)}
             basic
             color="blue"
             content="Edit"
           />
           <Button
-            onClick={() => setSelectedActivity(null)}
+            onClick={() => setSelectedActivity(undefined)}
             basic
             color="grey"
             content="Cancel"
@@ -47,3 +45,5 @@ export const ActivityDetails: React.FC<IProps> = ({
     </Card>
   );
 };
+
+export default observer(ActivityDetails);

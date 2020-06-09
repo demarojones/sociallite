@@ -1,25 +1,18 @@
-import React, { useState, FormEvent } from "react";
+import React, { useState, FormEvent, useContext } from "react";
 import { Segment, Form, Button } from "semantic-ui-react";
 import { IActivity } from "../../../app/models/activity";
 import { v4 as uuid } from "uuid";
+import activityStore from "../../../app/stores/activityStore";
 
 interface IProps {
-  activity: IActivity | null;
-  setEditMode: (editMode: boolean) => void;
-  editMode?: boolean;
-  createActivity: (activity: IActivity) => void;
-  editActivity: (activity: IActivity) => void;
-  submitting: boolean;
-  target: string;
+  activity: IActivity | undefined;
 }
-export const ActivityForm: React.FC<IProps> = ({
-  setEditMode,
-  activity: initialFormState,
-  createActivity,
-  editActivity,
-  submitting,
-  target,
-}) => {
+
+const ActivityForm: React.FC<IProps> = ({ activity: initialFormState }) => {
+  const { editActivity, createActivity, submitting, setEditMode } = useContext(
+    activityStore
+  );
+
   const initialiseForm = () => {
     if (initialFormState) {
       return initialFormState;
@@ -37,6 +30,7 @@ export const ActivityForm: React.FC<IProps> = ({
   };
 
   const [activity, setActivity] = useState<IActivity>(initialiseForm);
+
   const handleChange = (
     event: FormEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -50,11 +44,11 @@ export const ActivityForm: React.FC<IProps> = ({
         ...activity,
         id: uuid(),
       };
+      console.log("New activity: ", newActivity);
       createActivity(newActivity);
     } else {
       editActivity(activity);
     }
-    console.log(activity);
   };
 
   return (
@@ -116,3 +110,5 @@ export const ActivityForm: React.FC<IProps> = ({
     </Segment>
   );
 };
+
+export default ActivityForm;
